@@ -33,70 +33,77 @@
                         TextAlignment="Center" 
                         HorizontalAlignment="Stretch" VerticalAlignment="Center" />
 
-                    <ListView x:Name="postsList"
+                    <RefreshContainer 
                         Grid.Row="1"
-                        ItemsSource="{x:Bind ViewModel.Posts, Mode=TwoWay}"
-                        SelectionMode="Single"
-                        SelectedItem="{x:Bind ViewModel.SelectedPost, Mode=TwoWay}"
+                        PullDirection="TopToBottom"
+                        RefreshRequested="RefreshContainer_RefreshRequested" 
                         HorizontalAlignment="Stretch">
 
-                        <ListView.Transitions>
+                        <ListView x:Name="postsList"
+                            ItemsSource="{x:Bind ViewModel.Posts, Mode=TwoWay}"
+                            SelectionMode="Single"
+                            SelectedItem="{x:Bind ViewModel.SelectedPost, Mode=TwoWay}"
+                            HorizontalAlignment="Stretch">
 
-                            <TransitionCollection>
+                            <ListView.Transitions>
 
-                                <AddDeleteThemeTransition />
+                                <TransitionCollection>
 
-                            </TransitionCollection>
+                                    <AddDeleteThemeTransition />
 
-                        </ListView.Transitions>
+                                </TransitionCollection>
 
-                        <ListView.ItemTemplate>
+                            </ListView.Transitions>
 
-                            <DataTemplate>
+                            <ListView.ItemTemplate>
 
-                                <Grid HorizontalAlignment="Stretch" BorderBrush="DarkGray" BorderThickness="0,0,0,1" Padding="0,5">
+                                <DataTemplate>
 
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="100px" />
-                                        <ColumnDefinition Width="275" />
-                                    </Grid.ColumnDefinitions>
+                                    <Grid HorizontalAlignment="Stretch" BorderBrush="DarkGray" BorderThickness="0,0,0,1" Padding="0,5">
 
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="30px" />
-                                        <RowDefinition />
-                                        <RowDefinition Height="30px"/>
-                                    </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100px" />
+                                            <ColumnDefinition Width="275" />
+                                        </Grid.ColumnDefinitions>
 
-                                    <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="30px" />
+                                            <RowDefinition />
+                                            <RowDefinition Height="30px"/>
+                                        </Grid.RowDefinitions>
 
-                                        <Ellipse Fill="{Binding Read, Converter={StaticResource BoolToColorConverter}}"
+                                        <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="0">
+
+                                            <Ellipse Fill="{Binding Read, Converter={StaticResource BoolToColorConverter}}"
                                                      Height="10" Width="10" VerticalAlignment="Center" Margin="0,0,5,0" />
 
-                                        <TextBlock Text="{Binding Author}" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding Author}" VerticalAlignment="Center"/>
 
-                                    </StackPanel>
+                                        </StackPanel>
 
-                                    <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding CreatedUtc, Converter={StaticResource CreatedToHoursAgoConverter}}" 
+                                        <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding CreatedUtc, Converter={StaticResource CreatedToHoursAgoConverter}}" 
                                                    VerticalAlignment="Center"
                                                    TextAlignment="Right"/>
 
-                                    <Image Grid.Column="0" Grid.Row="1" Source="{Binding Thumbnail}" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+                                        <Image Grid.Column="0" Grid.Row="1" Source="{Binding Thumbnail}" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
 
-                                    <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Title}" VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                                        <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Title}" VerticalAlignment="Center" HorizontalAlignment="Stretch"
                                                    TextWrapping="Wrap" Padding="5,0"/>
 
-                                    <HyperlinkButton Grid.Column="0" Grid.Row="2" Content="Dismiss" Command="{Binding DismissCommand}" CommandParameter="{Binding Id}"
+                                        <HyperlinkButton Grid.Column="0" Grid.Row="2" Content="Dismiss" Command="{Binding DismissCommand}" CommandParameter="{Binding Id}"
                                                  VerticalAlignment="Center"/>
 
-                                    <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding Comments}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                        <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding Comments}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
 
-                                </Grid>
+                                    </Grid>
 
-                            </DataTemplate>
+                                </DataTemplate>
 
-                        </ListView.ItemTemplate>
+                            </ListView.ItemTemplate>
 
-                    </ListView>
+                        </ListView>
+
+                    </RefreshContainer>
 
                     <Grid Grid.Row="2" >
 

@@ -42,5 +42,10 @@ namespace RedditClient
         {
             ViewModel.SelectedPost.SaveImageCommand.Execute(null);
         }
+
+        private void RefreshContainer_RefreshRequested(RefreshContainer sender, RefreshRequestedEventArgs args)
+        {
+            ViewModel.LoadData();
+        }
     }
 }
