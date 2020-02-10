@@ -16,10 +16,72 @@
 
                 <Grid>
 
-                    <TextBlock Text="Pane"
-                           FontSize="24"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Center"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40px" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="40px" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock 
+                        Text="Reddit Posts" 
+                        TextAlignment="Center" 
+                        HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+
+                    <ListView x:Name="postsList"
+                        Grid.Row="1"
+                        ItemsSource="{x:Bind ViewModel.Posts, Mode=TwoWay}"
+                        SelectionMode="Single"
+                        SelectedItem="{x:Bind ViewModel.SelectedPost, Mode=TwoWay}"
+                        HorizontalAlignment="Stretch">
+
+                        <ListView.ItemTemplate>
+
+                            <DataTemplate>
+
+                                <Grid HorizontalAlignment="Stretch" >
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100px" />
+                                        <ColumnDefinition Width="275" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="30px" />
+                                        <RowDefinition />
+                                        <RowDefinition Height="30px"/>
+                                    </Grid.RowDefinitions>
+
+                                    <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="0">
+
+                                        <Ellipse Fill="Blue"
+                                                 Height="10" Width="10" 
+                                                 VerticalAlignment="Center" Margin="0,0,5,0" />
+
+                                        <TextBlock Text="{Binding Author}" VerticalAlignment="Center"/>
+
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding CreatedUtc}" 
+                                                VerticalAlignment="Center"
+                                                TextAlignment="Right"/>
+
+                                    <Image Grid.Column="0" Grid.Row="1" Source="{Binding Thumbnail}" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+
+                                    <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Title}" VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                                                TextWrapping="Wrap" Padding="5,0"/>
+
+                                    <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding Comments}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+
+                                </Grid>
+
+                            </DataTemplate>
+
+                        </ListView.ItemTemplate>
+
+                    </ListView>
+
+                    <Button Grid.Row="2" Content="Dismiss All" 
+                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
 
                 </Grid>
 
