@@ -25,6 +25,8 @@ namespace RedditClient.ViewModels
 
         public bool ShowPostContent { get; set; }
 
+        public ICommand RefreshCommand { get; set; }
+
         public ICommand DismissAllCommand { get; set; }
 
         /// <summary>
@@ -70,8 +72,7 @@ namespace RedditClient.ViewModels
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private void DismissCommand_ExecuteRequested(
-            XamlUICommand sender, ExecuteRequestedEventArgs args)
+        private void DismissCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
         {
             if (args.Parameter != null)
             {
@@ -98,13 +99,13 @@ namespace RedditClient.ViewModels
             }
         }
 
+
         /// <summary>
         /// Command for handling the dismissal of all posts
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private void DismissAllCommand_ExecuteRequested(
-            XamlUICommand sender, ExecuteRequestedEventArgs args)
+        private void DismissAllCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
         {
             try
             {
@@ -125,7 +126,70 @@ namespace RedditClient.ViewModels
             {
                 // Todo: implement error handling
             }
-        }        
+        }
+
+
+        /// <summary>
+        /// Command for handling the refresh of posts
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void RefreshCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+        {
+            try
+            {
+                LoadData();
+            }
+            catch (Exception ex)
+            {
+                // Todo: implement error handling
+            }
+        }
+
+
+        /// <summary>
+        /// Handle opening the full image
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void OpenImageCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+        {
+            try
+            {
+                if (args.Parameter != null)
+                {
+                    var uri = new Uri((string)args.Parameter);
+                    Task.Run(async () => await Windows.System.Launcher.LaunchUriAsync(uri));
+                }
+            }
+            catch (Exception ex)
+            {
+                // Todo: implement error handling
+                throw;
+            }
+        }
+
+
+        /// <summary>
+        /// Handle saving the full image
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void SaveImageCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+        {
+            try
+            {
+                if (args.Parameter != null)
+                {
+
+                }
+            }
+            catch (Exception ex)
+            {
+                // Todo: implement error handling
+                throw;
+            }
+        }
 
         #endregion
 
@@ -138,9 +202,14 @@ namespace RedditClient.ViewModels
         public MainPageViewModel()
         {
             // Create the dismiss all command
-            var dismissAllCommand = new StandardUICommand(StandardUICommandKind.Delete);
+            var dismissAllCommand = new XamlUICommand();
             dismissAllCommand.ExecuteRequested += DismissAllCommand_ExecuteRequested;
             DismissAllCommand = dismissAllCommand;
+
+            // Create the refresh command
+            var refreshCommand = new XamlUICommand();
+            refreshCommand.ExecuteRequested += RefreshCommand_ExecuteRequested;
+            RefreshCommand = refreshCommand;
 
             LoadData(); // Todo: make this really async
         }
@@ -156,14 +225,21 @@ namespace RedditClient.ViewModels
         /// <returns></returns>
         public async Task LoadData()
         {
-            // Create a dismiss command to add to the posts
-            var dismissCommand = new StandardUICommand(StandardUICommandKind.Delete);
+            // Create commands
+            var dismissCommand = new XamlUICommand();
             dismissCommand.ExecuteRequested += DismissCommand_ExecuteRequested;
 
+            var openImageCommand = new XamlUICommand();
+            openImageCommand.ExecuteRequested += OpenImageCommand_ExecuteRequested;
+
+            var saveImageCommand = new XamlUICommand();
+            saveImageCommand.ExecuteRequested += SaveImageCommand_ExecuteRequested;
+
+            // Get listings
             var listings = await HttpHelper.GetTop50Listings();
 
+            // Create collection of posts with additional properties
             var posts = new ObservableCollection<RedditPostViewModel>();
-
             foreach (var post in listings)
             {
                 posts.Add(new RedditPostViewModel
@@ -177,7 +253,9 @@ namespace RedditClient.ViewModels
                     Url = post.Url,
                     Read = false,
                     CreatedUtc = DateTimeOffset.FromUnixTimeSeconds(post.Created),
-                    DismissCommand = dismissCommand
+                    DismissCommand = dismissCommand,
+                    OpenImageCommand = openImageCommand,
+                    SaveImageCommand = saveImageCommand
                 });
             }
 
