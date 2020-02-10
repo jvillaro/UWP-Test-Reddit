@@ -138,20 +138,18 @@
                         <StackPanel Orientation="Vertical" Padding="20">
 
                             <TextBlock Text="{x:Bind ViewModel.SelectedPost.Author, Mode=OneWay}"
-                               FontSize="18"
-                               VerticalAlignment="Top"
-                               HorizontalAlignment="Stretch"/>
+                                FontSize="18"
+                                VerticalAlignment="Top"
+                                HorizontalAlignment="Stretch"/>
 
-                            <Button HorizontalAlignment="Center" Background="Transparent" Padding="0" Margin="0, 20, 0, 10" 
-                                Command="{x:Bind ViewModel.SelectedPost.OpenImageCommand}" CommandParameter="{x:Bind ViewModel.SelectedPost.Url}">
+                            <Button HorizontalAlignment="Center" Background="Transparent" Padding="0" Margin="0, 20, 0, 10" Click="OpenButton_Click">
 
                                 <Image Source="{x:Bind ViewModel.SelectedPost.Thumbnail, Mode=OneWay}"
                                    MaxWidth="200" Stretch="Uniform" />
 
                             </Button>
 
-                            <HyperlinkButton Content="Save image" HorizontalAlignment="Center"
-                                             Command="{x:Bind ViewModel.SelectedPost.SaveImageCommand}" CommandParameter="{x:Bind ViewModel.SelectedPost.Url}"/>
+                            <HyperlinkButton Content="Save image" HorizontalAlignment="Center" Click="SaveHyperlinkButton_Click"/>
 
                             <TextBlock Text="{x:Bind ViewModel.SelectedPost.Title, Mode=OneWay}"
                                 FontSize="24"

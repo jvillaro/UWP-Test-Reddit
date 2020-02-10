@@ -20,5 +20,27 @@ namespace RedditClient
 
             ViewModel = new MainPageViewModel();
         }
+
+
+        /// <summary>
+        /// Handle the click on open image
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OpenButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            ViewModel.SelectedPost.OpenImageCommand.Execute(null);
+        }
+
+
+        /// <summary>
+        /// Handle click on save image
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SaveHyperlinkButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            ViewModel.SelectedPost.SaveImageCommand.Execute(null);
+        }
     }
 }

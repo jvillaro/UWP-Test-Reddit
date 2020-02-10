@@ -2,8 +2,10 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.Storage;
 using Windows.UI.Xaml.Input;
 
 namespace RedditClient.ViewModels
@@ -156,16 +158,12 @@ namespace RedditClient.ViewModels
         {
             try
             {
-                if (args.Parameter != null)
-                {
-                    var uri = new Uri((string)args.Parameter);
-                    Task.Run(async () => await Windows.System.Launcher.LaunchUriAsync(uri));
-                }
+                var uri = new Uri((string)SelectedPost.Url);
+                Windows.System.Launcher.LaunchUriAsync(uri);
             }
             catch (Exception ex)
             {
                 // Todo: implement error handling
-                throw;
             }
         }
 
@@ -179,15 +177,17 @@ namespace RedditClient.ViewModels
         {
             try
             {
-                if (args.Parameter != null)
-                {
-
-                }
+                //using (WebClient webClient = new WebClient())
+                //{
+                //    StorageFolder storageFolder = KnownFolders.PicturesLibrary;
+                //    var path = storageFolder.Path;
+                //    webClient.DownloadFile(SelectedPost.Url, System.IO.Path.Combine(path,"image.jpg"));
+                //}                    
             }
             catch (Exception ex)
             {
                 // Todo: implement error handling
-                throw;
+                //throw;
             }
         }
 
