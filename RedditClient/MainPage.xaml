@@ -10,5 +10,36 @@
 
     <Grid>
 
+        <SplitView IsPaneOpen="True" DisplayMode="Inline" OpenPaneLength="400">
+
+            <SplitView.Pane>
+
+                <Grid>
+
+                    <TextBlock Text="Pane"
+                           FontSize="24"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"/>
+
+                </Grid>
+
+            </SplitView.Pane>
+
+            <SplitView.Content>
+
+                <Grid>
+                    
+                        <TextBlock Text="Content"
+                           FontSize="24"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"/>
+
+                </Grid>
+
+            </SplitView.Content>
+
+        </SplitView>
+
     </Grid>
+    
 </Page>
