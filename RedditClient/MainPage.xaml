@@ -6,7 +6,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    xmlns:converter="using:RedditClient.Converters"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <converter:BoolToColorConverter x:Key="BoolToColorConverter"/>
+        <converter:CreatedToHoursAgoConverter x:Key="CreatedToHoursAgoConverter"/>
+    </Page.Resources>
 
     <Grid>
 
@@ -38,7 +44,7 @@
 
                             <DataTemplate>
 
-                                <Grid HorizontalAlignment="Stretch" >
+                                <Grid HorizontalAlignment="Stretch" BorderBrush="DarkGray" BorderThickness="0,0,0,1" Padding="0,5">
 
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="100px" />
@@ -53,7 +59,7 @@
 
                                     <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="0">
 
-                                        <Ellipse Fill="Blue"
+                                        <Ellipse Fill="{Binding Read, Converter={StaticResource BoolToColorConverter}}"
                                                  Height="10" Width="10" 
                                                  VerticalAlignment="Center" Margin="0,0,5,0" />
 
@@ -61,7 +67,7 @@
 
                                     </StackPanel>
 
-                                    <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding CreatedUtc}" 
+                                    <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding CreatedUtc, Converter={StaticResource CreatedToHoursAgoConverter}}" 
                                                 VerticalAlignment="Center"
                                                 TextAlignment="Right"/>
 
@@ -90,11 +96,15 @@
             <SplitView.Content>
 
                 <Grid>
-                    
-                        <TextBlock Text="Content"
+
+                    <Grid Visibility="{x:Bind converter:BoolToVisibilityConverter.Collapsed(ViewModel.ShowPostContent), Mode=OneWay}">
+
+                        <TextBlock Text="Select a post"
                            FontSize="24"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Center"/>
+
+                    </Grid>
 
                 </Grid>
 

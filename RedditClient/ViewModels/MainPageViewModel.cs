@@ -20,6 +20,8 @@ namespace RedditClient.ViewModels
 
         #region --- Properties ---
 
+        public bool ShowPostContent { get; set; }
+
         /// <summary>
         /// Reddit posts collection
         /// </summary>
@@ -45,8 +47,10 @@ namespace RedditClient.ViewModels
                 {
                     selectedPost = value;
                     selectedPost.Read = true;
+                    ShowPostContent = true;
                     OnPropertyChanged(nameof(Posts));
                     OnPropertyChanged(nameof(SelectedPost));
+                    OnPropertyChanged(nameof(ShowPostContent));
                 }
             }
         }
