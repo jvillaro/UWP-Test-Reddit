@@ -58,6 +58,21 @@ namespace RedditClient.ViewModels
         /// <summary>
         /// Returns a formated string with the amount of comments
         /// </summary>
-        public string Comments => $"{CommentsCount} comments";// string.Format("{0} comments", CommentsCount);
+        public string Comments => $"{CommentsCount} comments";
+
+        /// <summary>
+        /// Command to handle individual dismissal
+        /// </summary>
+        public ICommand DismissCommand { get; set; }
+
+        /// <summary>
+        /// Command to handle opening to view the full image
+        /// </summary>
+        public ICommand OpenImageCommand { get; set; }
+
+        /// <summary>
+        /// Command to handle saving the full image
+        /// </summary>
+        public ICommand SaveImageCommand { get; set; }
     }
 }

@@ -1,7 +1,10 @@
 ﻿using RedditClient.Helpers;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using Windows.UI.Xaml.Input;
 
 namespace RedditClient.ViewModels
 {
@@ -21,6 +24,8 @@ namespace RedditClient.ViewModels
         #region --- Properties ---
 
         public bool ShowPostContent { get; set; }
+
+        public ICommand DismissAllCommand { get; set; }
 
         /// <summary>
         /// Reddit posts collection
@@ -58,6 +63,73 @@ namespace RedditClient.ViewModels
         #endregion
 
 
+        #region --- Commands ---
+
+        /// <summary>
+        /// Command for handling the dismissal of a post
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void DismissCommand_ExecuteRequested(
+            XamlUICommand sender, ExecuteRequestedEventArgs args)
+        {
+            if (args.Parameter != null)
+            {
+                try
+                {
+                    SelectedPost = null;
+
+                    var id = (string)args.Parameter;
+                    Posts.Remove(Posts.FirstOrDefault(x => x.Id == id));
+
+                    OnPropertyChanged(nameof(Posts));
+                    OnPropertyChanged(nameof(SelectedPost));
+
+                    if (!Posts.Any())
+                    {
+                        ShowPostContent = false;
+                        OnPropertyChanged(nameof(ShowPostContent));
+                    }
+                }
+                catch (Exception)
+                {
+                    // Todo: implement error handling
+                }
+            }
+        }
+
+        /// <summary>
+        /// Command for handling the dismissal of all posts
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void DismissAllCommand_ExecuteRequested(
+            XamlUICommand sender, ExecuteRequestedEventArgs args)
+        {
+            try
+            {
+                SelectedPost = null;
+                OnPropertyChanged(nameof(SelectedPost));
+
+                while (Posts.Count > 0)
+                {
+                    Posts.Remove(Posts.Last());
+                }
+                OnPropertyChanged(nameof(Posts));
+
+                ShowPostContent = false;
+                OnPropertyChanged(nameof(ShowPostContent));
+
+            }
+            catch (Exception ex)
+            {
+                // Todo: implement error handling
+            }
+        }        
+
+        #endregion
+
+
         #region --- Constructor ---
 
         /// <summary>
@@ -65,6 +137,11 @@ namespace RedditClient.ViewModels
         /// </summary>
         public MainPageViewModel()
         {
+            // Create the dismiss all command
+            var dismissAllCommand = new StandardUICommand(StandardUICommandKind.Delete);
+            dismissAllCommand.ExecuteRequested += DismissAllCommand_ExecuteRequested;
+            DismissAllCommand = dismissAllCommand;
+
             LoadData(); // Todo: make this really async
         }
 
@@ -79,6 +156,10 @@ namespace RedditClient.ViewModels
         /// <returns></returns>
         public async Task LoadData()
         {
+            // Create a dismiss command to add to the posts
+            var dismissCommand = new StandardUICommand(StandardUICommandKind.Delete);
+            dismissCommand.ExecuteRequested += DismissCommand_ExecuteRequested;
+
             var listings = await HttpHelper.GetTop50Listings();
 
             var posts = new ObservableCollection<RedditPostViewModel>();
@@ -95,7 +176,8 @@ namespace RedditClient.ViewModels
                     Thumbnail = post.Thumbnail,
                     Url = post.Url,
                     Read = false,
-                    CreatedUtc = DateTimeOffset.FromUnixTimeSeconds(post.Created)
+                    CreatedUtc = DateTimeOffset.FromUnixTimeSeconds(post.Created),
+                    DismissCommand = dismissCommand
                 });
             }
 

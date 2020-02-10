@@ -40,6 +40,16 @@
                         SelectedItem="{x:Bind ViewModel.SelectedPost, Mode=TwoWay}"
                         HorizontalAlignment="Stretch">
 
+                        <ListView.Transitions>
+
+                            <TransitionCollection>
+
+                                <AddDeleteThemeTransition />
+
+                            </TransitionCollection>
+
+                        </ListView.Transitions>
+
                         <ListView.ItemTemplate>
 
                             <DataTemplate>
@@ -60,21 +70,26 @@
                                     <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="0">
 
                                         <Ellipse Fill="{Binding Read, Converter={StaticResource BoolToColorConverter}}"
-                                                 Height="10" Width="10" 
-                                                 VerticalAlignment="Center" Margin="0,0,5,0" />
+                                                     Height="10" Width="10" VerticalAlignment="Center" Margin="0,0,5,0" />
 
                                         <TextBlock Text="{Binding Author}" VerticalAlignment="Center"/>
 
                                     </StackPanel>
 
                                     <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding CreatedUtc, Converter={StaticResource CreatedToHoursAgoConverter}}" 
-                                                VerticalAlignment="Center"
-                                                TextAlignment="Right"/>
+                                                   VerticalAlignment="Center"
+                                                   TextAlignment="Right"/>
 
                                     <Image Grid.Column="0" Grid.Row="1" Source="{Binding Thumbnail}" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
 
                                     <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Title}" VerticalAlignment="Center" HorizontalAlignment="Stretch"
-                                                TextWrapping="Wrap" Padding="5,0"/>
+                                                   TextWrapping="Wrap" Padding="5,0"/>
+
+                                    <!--<Button Grid.Column="0" Grid.Row="2" Content="Dismiss" Command="{Binding DismissCommand}" CommandParameter="{Binding Id}"
+                                                 VerticalAlignment="Center"/>-->
+
+                                    <HyperlinkButton Grid.Column="0" Grid.Row="2" Content="Dismiss" Command="{Binding DismissCommand}" CommandParameter="{Binding Id}"
+                                                 VerticalAlignment="Center"/>
 
                                     <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding Comments}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
 
@@ -87,7 +102,8 @@
                     </ListView>
 
                     <Button Grid.Row="2" Content="Dismiss All" 
-                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                            Command="{x:Bind ViewModel.DismissAllCommand}"/>
 
                 </Grid>
 
@@ -103,6 +119,32 @@
                            FontSize="24"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Center"/>
+
+                    </Grid>
+
+                    <Grid Visibility="{x:Bind converter:BoolToVisibilityConverter.Visible(ViewModel.ShowPostContent), Mode=OneWay}"
+                          HorizontalAlignment="Stretch">
+
+                        <StackPanel Orientation="Vertical" Padding="20">
+
+                            <TextBlock Text="{x:Bind ViewModel.SelectedPost.Author, Mode=OneWay}"
+                               FontSize="18"
+                               VerticalAlignment="Top"
+                               HorizontalAlignment="Stretch"/>
+
+                            <Image Source="{x:Bind ViewModel.SelectedPost.Thumbnail, Mode=OneWay}"
+                                   Margin="0,20"
+                                   MaxWidth="200" Stretch="Uniform"/>
+
+                            <HyperlinkButton Content="Save image" HorizontalAlignment="Center"/>
+
+                            <TextBlock Text="{x:Bind ViewModel.SelectedPost.Title, Mode=OneWay}"
+                                FontSize="24"
+                                VerticalAlignment="Top"
+                                HorizontalAlignment="Stretch"
+                                TextWrapping="Wrap"/>
+
+                        </StackPanel>
 
                     </Grid>
 
